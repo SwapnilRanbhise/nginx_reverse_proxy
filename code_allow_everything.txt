@@ -14,9 +14,10 @@ server {
     listen 443 ssl;
     server_name supplier.unionsystechnologies.com;
 
-    # Replace with your SSL cert paths!
-    ssl_certificate /etc/ssl/certs/your_cert.crt;
-    ssl_certificate_key /etc/ssl/private/your_cert.key;
+    # ✅ Let’s Encrypt certificate paths
+    ssl_certificate /etc/letsencrypt/live/supplier.unionsystechnologies.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/supplier.unionsystechnologies.com/privkey.pem;
+
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
 
