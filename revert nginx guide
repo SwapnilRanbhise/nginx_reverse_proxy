@@ -1,0 +1,86 @@
+## ✅ How to Revert Everything Back After Using NGINX
+
+This guide explains how to fully revert your server to its previous state if you installed and configured **NGINX**, without changing any firewall rules or DNS settings.
+
+---
+
+### ✅ 1️⃣ Your Situation
+
+* You did **not** change your firewall rules.
+* You did **not** change DNS settings or `/etc/hosts`.
+* You only installed and configured **NGINX** to handle requests for your domain.
+* Your domain (`supplier.unionsystechnologies.com`) resolves to your public IP as before.
+
+---
+
+### ✅ 2️⃣ What Happens if You Stop or Remove NGINX
+
+* When a client requests `supplier.unionsystechnologies.com`:
+
+  * DNS resolves to your public IP.
+  * The browser connects to your server on port **80** or **443**.
+  * If **NGINX is stopped or removed**, there is **no service** listening on those ports.
+  * The request **fails** (browser shows `ERR_CONNECTION_REFUSED` or timeout).
+* **The system does NOT automatically forward the request to another private IP server.**
+
+---
+
+### ✅ 3️⃣ Steps to Revert to "Normal"
+
+#### 1️⃣ Stop and Disable NGINX
+
+```bash
+sudo systemctl stop nginx
+sudo systemctl disable nginx
+```
+
+#### 2️⃣ Uninstall NGINX (Optional)
+
+```bash
+sudo yum remove nginx  # For Oracle Linux
+# Or for Debian/Ubuntu:
+# sudo apt remove nginx
+```
+
+#### 3️⃣ Verify No Web Server is Listening
+
+Check open ports:
+
+```bash
+sudo netstat -tulnp | grep ':80\|:443'
+```
+
+* If nothing is listening, requests will fail (which is "normal" if you had no other web server).
+
+---
+
+### ✅ 4️⃣ What You *Don’t* Need to Do
+
+* No need to revert firewall settings (since you didn’t change them).
+* No need to edit `/etc/hosts` or DNS (since they were not changed).
+
+---
+
+### ✅ Key Point
+
+* **NGINX was accepting and proxying requests.**
+* **Stopping or removing it means there is nothing to handle incoming traffic.**
+* **Requests won’t automatically forward anywhere else.**
+
+If you want requests to go elsewhere automatically, you must:
+
+* Run another web server (Apache, Caddy, etc.)
+* Or update DNS to point to another public IP that can handle them.
+
+---
+
+## ✅ Summary Checklist
+
+| Step            | Command                        |
+| --------------- | ------------------------------ |
+| Stop NGINX      | `sudo systemctl stop nginx`    |
+| Disable NGINX   | `sudo systemctl disable nginx` |
+| Uninstall NGINX | `sudo yum remove nginx`        |
+| Verify ports    | `sudo netstat -tulnp`          |
+
+✅ **Done!**
