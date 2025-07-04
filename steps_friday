@@ -1,0 +1,15 @@
+✅ Steps for file creation & linking (short):
+
+1️⃣ Create config file:
+/etc/nginx/sites-available/your_config.conf
+
+2️⃣ Add your server block (like the one you wrote).
+
+3️⃣ Link it:
+ln -s /etc/nginx/sites-available/your_config.conf /etc/nginx/sites-enabled/
+
+4️⃣ Test config:
+nginx -t
+
+5️⃣ Reload NGINX:
+nginx -s reload
