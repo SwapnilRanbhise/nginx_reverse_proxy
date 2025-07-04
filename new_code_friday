@@ -1,29 +1,26 @@
-###########################################
+
 # HTTP → HTTPS Redirect
-###########################################
 server {
     listen 80;
     server_name supplier.unionsystechnologies.com;
     return 301 https://$host$request_uri;
 }
 
-###########################################
 # Main HTTPS Reverse Proxy
-###########################################
 server {
     listen 443 ssl;
     server_name supplier.unionsystechnologies.com;
 
-    # ✅ Let’s Encrypt certificate paths
+    # Let’s Encrypt certificate paths
     ssl_certificate /etc/letsencrypt/live/supplier.unionsystechnologies.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/supplier.unionsystechnologies.com/privkey.pem;
 
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
 
-    ###########################################
+
     # Vanity URL: / → ORDS backend base path
-    ###########################################
+    
     location / {
         proxy_pass https://192.168.0.177:8443/ords/r/;
         proxy_ssl_server_name on;
